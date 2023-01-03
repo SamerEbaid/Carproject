@@ -1,0 +1,310 @@
+#include <iostream>
+using namespace std;
+
+#include <GL/gl.h>
+
+#include <GL/glu.h>
+#include <GL/glut.h>
+
+#include <stdlib.h>
+#include <windows.h>
+#include <math.h>
+float translateX;
+float translateY;
+//----------------------keyboard--------------------------
+void keyboard(unsigned char Key,int x,int y)
+    {
+    switch(Key){
+        case 'd': translateX++;
+        break ;
+
+        case 'a': translateX--;
+        break;
+
+        case 'w': translateY++;
+        break;
+
+        case 's': translateY--;
+        break;
+
+        case 'f': glutFullScreen() ;
+        break;
+        case 27 : exit(0);
+        break;
+    }
+
+}
+float xRotated = 90.0, yRotated = 0.0, zRotated = 0.0;
+
+//---------------------mouse-------------
+void onMouseClick(int button, int state, int x, int y)
+{
+    if(button==GLUT_LEFT_BUTTON&&state==GLUT_DOWN)
+    {
+
+        translateX--;
+    }
+}
+
+//------------------------------  reshapeFunc  ---------------------------------
+
+void reshapeFunc (int w, int h)
+{
+    glViewport(0,0,(GLsizei)w,(GLsizei)h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective (40.0, (GLdouble)w / (GLdouble)h, 0.5, 20.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+//----------------------------------------------------
+void init(){
+    glClearColor(0,0,0,1);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-500,500,-500,500,-500,500);
+    glMatrixMode(GL_MODELVIEW);
+
+}
+//---------------------------------------car----------------------------------
+void front()
+{
+    glColor3f(0,0,1);
+    glPushMatrix();
+    glTranslatef(-450,-250,0);
+    glScalef(1.01,0.3,0.85);
+    glutSolidCube(600);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+
+    glColor3f(1,1,1);
+    glPushMatrix();
+    glTranslatef(-370,-70,0);
+    glRotatef(-45,0,0,1);
+    glScalef(0.01,0.4,0.85);
+    glutWireCube(600);
+    glPopMatrix();
+}
+void back()
+{
+    glColor3f(0,0,1);
+    glPushMatrix();
+    glTranslatef(450,-250,0);
+    glScalef(1.01,0.3,0.85);
+    glutSolidCube(600);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+
+    glColor3f(0,0,1);
+    glPushMatrix();
+    glTranslatef(380,-80,0);
+    glRotatef(38,0,0,1);
+    glScalef(0.01,0.35,0.85);
+    glutSolidCube(600);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+}
+void top()
+{
+    glColor3f(0,0,1);
+    glPushMatrix();
+    glTranslatef(15,20,0);
+    glScalef(1,0.01,0.85);
+    glutSolidCube(600);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+}
+void bottom()
+{
+     glColor3f(0,0,1);
+    glPushMatrix();
+    glTranslatef(0,-340,0);
+    glScalef(2.5,0.01,0.85);
+    glutSolidCube(600);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+}
+void left()
+{
+    glColor3f(0,0,1);
+    glPushMatrix();
+    glTranslatef(0,-250,250);
+    glScalef(2.5,0.3,0.01);
+    glutSolidCube(600);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+}
+void right()
+{
+    glColor3f(0,0,1);
+    glPushMatrix();
+    glTranslatef(0,-250,-250);
+    glScalef(2.5,0.3,0.01);
+    glutSolidCube(600);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+}
+void wheel(int x , int y , int z)
+{
+    float th;
+    glColor3f(0.4,0.4,0.4);
+    int j;
+    for(j=0;j<50;j+=10)
+    {
+
+        glBegin(GL_POLYGON);
+        for(int i=0;i<360;i++)
+        {
+            th=i*3.142/180;
+            glVertex3f(x+140*cos(th),y+140*sin(th),z+j);
+        }
+    glEnd();
+}
+}
+void boarder()
+{
+    glPushMatrix();
+    glTranslatef(-50,-160,250);
+    glScalef(0.01,0.6,0.01);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-50,-160,-250);
+    glScalef(0.01,0.6,0.01);
+    glColor3f(1,1,1);
+    glutWireCube(600);
+    glPopMatrix();
+}
+void car()
+{
+    front();
+    back();
+    top();
+    bottom();
+    left();
+    right();
+    wheel(-300,-400,200);
+    wheel(300,-400,200);
+    wheel(-300,-400,-200);
+    wheel(300,-400,-200);
+    boarder();
+}
+
+//------------------------------  display   -------------------------------
+float theta;
+void display (void)
+{
+    theta+=0.1;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    //glRotatef(theta,1,1,0);
+    glScalef(0.2,0.2,0.2);
+    car();
+    //CLOUD
+     /////////////////////////////////////
+
+    glPushMatrix ();
+       glTranslatef    (150, 1000, 0.0);
+       glRotatef       (60.0, 1,0,0);
+      //glRotatef       (zRotated, 0,1,0);
+       glutSolidSphere(300,1000, 500);
+    glPopMatrix ();
+//////////////////////////////////////////////////
+       glPushMatrix ();
+       glTranslatef    (-100, 1000, 0.0);
+       glRotatef       (60.0, 1,0,0);
+      //glRotatef       (zRotated, 0,0,1);
+       glutSolidSphere(300,1000, 500);
+    glPopMatrix ();
+    /////////////////////////
+     glPushMatrix ();
+       glTranslatef    (-400, 1000, 0.0);
+       glRotatef       (60.0, 1,0,0);
+      //glRotatef       (zRotated, 0,0,1);
+       glutSolidSphere(300,1000, 500);
+    glPopMatrix ();
+    //END CLOUD
+    //glutSwapBuffers();
+    glutPostRedisplay();
+
+
+
+	//Your code is written here
+
+
+
+    glutSwapBuffers();
+}
+
+//--------------------------------  idleFunc  ----------------------------------
+
+void idleFunc (void)
+{
+    zRotated += 1;
+    glutPostRedisplay();
+}
+
+void texture (void){
+
+const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
+
+const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
+const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
+const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat high_shininess[] = { 100.0f };
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+
+
+}
+
+//----------------------------------  main  ------------------------------------
+
+
+int main (int argc, char **argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH); // buffer mode
+    glutInitWindowPosition (0,0);
+    glutInitWindowSize(500,500);
+    glutCreateWindow("20101589");
+    init();
+    glutKeyboardFunc(keyboard);
+    glutMouseFunc(onMouseClick);
+    //sndPlaySound("background.way",SND_ASYNC|SND_LOOP);
+    glutDisplayFunc (display);
+    glEnable(GL_DEPTH_TEST);
+    glutMainLoop();
+    //texture();
+
+}
