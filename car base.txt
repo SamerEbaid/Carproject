@@ -1,8 +1,4 @@
-#include <iostream>
-using namespace std;
-
 #include <GL/gl.h>
-
 #include <GL/glu.h>
 #include <GL/glut.h>
 
@@ -205,33 +201,9 @@ void display (void)
     theta+=0.1;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    //glRotatef(theta,1,1,0);
-    glScalef(0.2,0.2,0.2);
+    glRotatef(theta,1,1,0);
+    glScalef(0.5,0.5,0.5);
     car();
-    //CLOUD
-     /////////////////////////////////////
-
-    glPushMatrix ();
-       glTranslatef    (150, 1000, 0.0);
-       glRotatef       (60.0, 1,0,0);
-      //glRotatef       (zRotated, 0,1,0);
-       glutSolidSphere(300,1000, 500);
-    glPopMatrix ();
-//////////////////////////////////////////////////
-       glPushMatrix ();
-       glTranslatef    (-100, 1000, 0.0);
-       glRotatef       (60.0, 1,0,0);
-      //glRotatef       (zRotated, 0,0,1);
-       glutSolidSphere(300,1000, 500);
-    glPopMatrix ();
-    /////////////////////////
-     glPushMatrix ();
-       glTranslatef    (-400, 1000, 0.0);
-       glRotatef       (60.0, 1,0,0);
-      //glRotatef       (zRotated, 0,0,1);
-       glutSolidSphere(300,1000, 500);
-    glPopMatrix ();
-    //END CLOUD
     //glutSwapBuffers();
     glutPostRedisplay();
 
@@ -301,7 +273,6 @@ int main (int argc, char **argv)
     init();
     glutKeyboardFunc(keyboard);
     glutMouseFunc(onMouseClick);
-    //sndPlaySound("background.way",SND_ASYNC|SND_LOOP);
     glutDisplayFunc (display);
     glEnable(GL_DEPTH_TEST);
     glutMainLoop();
